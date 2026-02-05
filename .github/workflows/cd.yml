@@ -27,10 +27,10 @@ jobs:
     - name: 🔍 Verificar index.html
       run: |
         if [ ! -f "index.html" ]; then
-          echo "❌ ERRO: Arquivo index.html não encontrado!"
+          echo "ERRO: Arquivo index.html nao encontrado!"
           exit 1
         fi
-        echo "✅ index.html validado!"
+        echo "OK: index.html validado!"
 
     - name: ⚙️ Configurar Pages
       uses: actions/configure-pages@v4
@@ -47,12 +47,5 @@ jobs:
     - name: 📧 Notificar sucesso
       if: success()
       run: |
-        echo "🎉 Deploy realizado com sucesso!"
-        echo "📱 Site publicado em: ${{ steps.deployment.outputs.page_url }}"
-
-    - name: 📧 Notificar falha
-      if: failure()
-      run: |
-        echo "❌ Deploy falhou!"
-        echo "⚠️  Verifique os logs para mais detalhes."
-        exit 1
+        echo "Deploy realizado com sucesso!"
+        echo "Site publicado em: ${{ steps.deployment.outputs.page_url }}"

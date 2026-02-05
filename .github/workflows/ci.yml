@@ -18,56 +18,51 @@ jobs:
     - name: 🔍 Verificar existência de index.html
       run: |
         if [ ! -f "index.html" ]; then
-          echo "❌ ERRO: Arquivo index.html não encontrado na raiz do projeto!"
-          echo "O GitHub Pages requer obrigatoriamente um arquivo index.html na raiz."
+          echo "ERRO: Arquivo index.html nao encontrado na raiz do projeto!"
           exit 1
         fi
-        echo "✅ index.html encontrado com sucesso!"
+        echo "OK: index.html encontrado com sucesso!"
 
     - name: 🔎 Verificar nomes de arquivo inválidos
       run: |
         if find . -type f \( -name "index-*.html" -o -name "home.html" \) | grep -q .; then
-          echo "❌ ERRO: Arquivos HTML com nome inválido encontrados!"
-          echo "Use apenas index.html na raiz do projeto."
+          echo "ERRO: Arquivos HTML com nome invalido encontrados!"
           exit 1
         fi
-        echo "✅ Nomes de arquivo válidos!"
+        echo "OK: Nomes de arquivo validos!"
 
     - name: 💾 Verificar tamanho dos arquivos (máx 500KB)
       run: |
-        echo "🔍 Verificando tamanho dos arquivos..."
+        echo "Verificando tamanho dos arquivos..."
         FILES=$(find . -type f -size +500k)
         if [ ! -z "$FILES" ]; then
-          echo "❌ ERRO: Arquivos maiores que 500KB encontrados:"
+          echo "ERRO: Arquivos maiores que 500KB encontrados:"
           echo "$FILES"
-          echo "Comprima ou remova as imagens grandes."
           exit 1
         fi
-        echo "✅ Todos os arquivos estão dentro do limite de 500KB!"
+        echo "OK: Todos os arquivos estao dentro do limite de 500KB!"
 
     - name: 📝 Verificar comentários e termos sensíveis
       run: |
-        echo "🔍 Verificando código em busca de TODO, FIXME, senha e password..."
+        echo "Verificando codigo em busca de TODO, FIXME, senha e password..."
         if grep -r "TODO\|FIXME\|senha\|password" --include="*.html" --include="*.js" --include="*.css" . 2>/dev/null; then
-          echo "❌ ERRO: Comentários ou termos sensíveis encontrados!"
-          echo "Remova TODO, FIXME, 'senha' e 'password' antes de fazer merge."
+          echo "ERRO: Comentarios ou termos sensiveis encontrados!"
           exit 1
         fi
-        echo "✅ Nenhum comentário ou termo sensível encontrado!"
+        echo "OK: Nenhum comentario ou termo sensivel encontrado!"
 
     - name: 🔗 Verificar validade de links HTML
       run: |
-        echo "🔍 Verificando tags HTML (links e imagens)..."
-        # Verificar se há tags img ou a sem atributos válidos
+        echo "Verificando tags HTML (links e imagens)..."
         if grep -E '<img[^>]*src="[^"]*"[^>]*>' index.html | grep -E 'src=""' >/dev/null; then
-          echo "❌ ERRO: Tag img encontrada com src vazio!"
+          echo "ERRO: Tag img encontrada com src vazio!"
           exit 1
         fi
         if grep -E '<a[^>]*href="[^"]*"[^>]*>' index.html | grep -E 'href=""' >/dev/null; then
-          echo "❌ ERRO: Tag a encontrada com href vazio!"
+          echo "ERRO: Tag a encontrada com href vazio!"
           exit 1
         fi
-        echo "✅ Todos os links e imagens estão válidos!"
+        echo "OK: Todos os links e imagens estao validos!"
 
     - name: 📦 Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
@@ -79,11 +74,9 @@ jobs:
 
     - name: 🔧 Executar Linter no HTML
       run: |
-        echo "🔍 Executando HTMLHint para validação de código..."
-        htmlhint index.html || echo "⚠️  Alguns problemas de lintagem encontrados (avisos)"
-        echo "✅ Validação de HTML concluída!"
+        echo "Executando HTMLHint para validacao de codigo..."
+        htmlhint index.html || true
+        echo "OK: Validacao de HTML concluida!"
 
     - name: 🎉 Validação concluída com sucesso!
-      run: |
-        echo "✅ Todos os testes passaram com sucesso!"
-        echo "🚀 O código está pronto para ser mergeado para main!"
+      run: echo "OK: Todos os testes passaram com sucesso!"
